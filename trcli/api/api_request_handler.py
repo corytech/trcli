@@ -170,7 +170,12 @@ class ApiRequestHandler:
         error_message = ""
         response = self.client.send_get(f"get_suites/{project_id}")
         if not response.error_message:
-            for suite in response.response_text:
+            suites_data = response.response_text
+            if isinstance(suites_data, dict) and "suites" in suites_data:
+                suites_data = suites_data["suites"]
+
+            for suite in suites_data:
+#             for suite in response.response_text:
                 available_suites.append(int(suite["id"]))
                 returned_resources.append(
                     {
